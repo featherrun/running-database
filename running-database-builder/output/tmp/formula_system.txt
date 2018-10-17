@@ -1,0 +1,30 @@
+actor_reward	#	floor(((actor_level*(1+actor_level*0.5)*200+actor_level*(1+actor_star*actor_star*0.5)*(1+actor_star*actor_star*0.5)*5)/100)*100*role_weight)	#	actor_level,actor_star,role_weight	#	电影拍摄：明星拍摄酬劳 = CEILING(明星等级*(1+明星星级*0.5)*200+明星等级*(1+明星星级^2*0.5)^2*5,100)*角色权重	#	
+-
+audience_reputation	#	min(100,round((((min(movie_scene,movie_scene_max)+min(movie_plot,movie_plot_max)+min(movie_ent,movie_ent_max))*grade_actor_pro+(movie_scene_max+movie_plot_max+movie_ent_max)*grade_movie_att_pro)/(movie_scene_max+movie_plot_max+movie_ent_max))*100*(1-market_gap)*wm_float))	#	movie_scene,movie_scene_max,movie_plot,movie_plot_max,movie_ent,movie_ent_max,grade_actor_pro,grade_movie_att_pro,market_gap,wm_float	#	电影拍摄：观众口碑 = MIN(100,ROUND((((影片拍摄场面+影片拍摄剧情+影片拍摄娱乐)*街区档次角色属性加成系数+影片拍摄属性上限*街区档次属性基数加成系数)/(影片上限场面+影片上限剧情+影片上限娱乐))*100*(1-市场需求缺口)*口碑浮动,0))；口碑浮动暂定80%-110%；计算中的影片拍摄属性不超过上限	#	
+-
+drama_goodat_pro	#	actor_goodat_drama*drama_type_add	#	actor_goodat_drama,drama_type_add	#	电影拍摄：剧本擅长加成 = (该明星对应剧本擅长加成*剧本影片类型加成)的累加	#	
+-
+firstday_boxoffice	#	media_score*theatre_chain*grade*(1+market_type)*firstday_boxoffice_float	#	media_score,theatre_chain,grade,market_type,firstday_boxoffice_float	#	电影拍摄：首日票房 = 媒体评分*院线数量*街区档次系数*(1+市场类型加成)*首日票房浮动；口碑浮动暂定80%-110%	#	
+-
+gross_boxoffice	#	firstday_boxoffice*0.8*(audience_reputation/100)*show_day*gross_boxoffice_float+10000	#	firstday_boxoffice,audience_reputation,show_day,gross_boxoffice_float	#	电影拍摄：总票房 = 首日票房*0.8*(观众口碑/100)*上映天数*总票房浮动+10000；口碑浮动暂定80%-120%	#	
+-
+like_value	#	ceil((0.01*(90+random()*20))*(180+media_score*6))	#	media_score	#	电影拍摄：点赞数 = CEILING((0.01*RANDBETWEEN(90,110))*(180+媒体评分*6),1)	#	
+-
+market_gap	#	max(market_re_male-market_sta_male,0)+max(market_re_female-market_sta_female,0)+max(market_re_kid-market_sta_kid,0)	#	market_re_male,market_sta_male,market_re_female,market_sta_female,market_re_kid,market_sta_kid	#	电影拍摄：市场差异缺口 = MAX(男性观众市场需求-男性观众市场统计,0)+MAX(女性观众市场需求-女性观众市场统计,0)+MAX(儿童观众市场需求-儿童观众市场统计,0)	#	
+-
+media_score	#	min(10,(((min(movie_act,movie_act_max)+min(movie_art,movie_art_max))*grade_actor_pro+(movie_act_max+movie_art_max)*grade_movie_att_pro)/(movie_act_max+movie_art_max))*10*score_float)	#	movie_act,movie_act_max,movie_art,movie_art_max,grade_actor_pro,grade_movie_att_pro,score_float	#	电影拍摄：媒体评分 = MIN(10,(((影片拍摄表演+影片拍摄艺术)*街区档次角色属性加成系数+影片拍摄属性上限*街区档次属性基数加成系数)/(影片上限表演+影片上限艺术))*10*评分浮动)；评分浮动暂定80%-110%；计算中的影片拍摄属性不超过上限	#	
+-
+meeting_cost	#	level*grade*100	#	level,grade	#	会议：支付金钱	#	
+-
+movie_att	#	actor_att*role_pro*att_float*(1+drama_star_pro+drama_goodat_pro+role_goodat_pro+drama_filmtype_pro+drama_filmtype_skilled_pro+audi_re_add)*(1+burst_pro)	#	actor_att,role_pro,att_float,drama_star_pro,drama_goodat_pro,role_goodat_pro,drama_filmtype_pro,drama_filmtype_skilled_pro,audi_re_add,burst_pro	#	电影拍摄：影片拍摄属性 = (选角明星属性*街区档次角色属性加成系数+影片拍摄属性上限*街区档次属性基数加成系数)*角色属性比例*属性浮动*(1+剧本星级加成+剧本擅长加成+角色擅长加成+剧本类型契合加成+熟练等级加成+观众需求额外加成)*(1+状态爆发加成)；属性浮动暂定80%-110%	#	
+-
+movie_att_max	#	drama_att_max*grade_att_para	#	drama_att_max,grade_att_para	#	电影拍摄：影片拍摄属性上限 = 基础属性上限*街区档次属性上限系数	#	
+-
+movie_fans	#	(200*+1400)*boxoffice_fans_pro	#	grade_fans,boxoffice_fans_pro	#	电影拍摄：每次拍摄粉丝数 = 街区档次每次拍摄粉丝*票房情况粉丝加成	#	
+-
+movie_Rincome	#	grade_recurring_income*movie_rate_Rincome_pro*publicity_recurring_income_pro	#	grade_recurring_income,movie_rate_Rincome_pro,publicity_recurring_income_pro	#	电影拍摄：影片每分钟持续收益 = 街区档次对应每分钟持续收益*影片票房等级加成*关注度等级加成	#	
+-
+road_show_trans	#	ceil(actor_att*0.185)	#	actor_att	#	市场：路演热度 = CEILING(明星总属性*0.185,1)	#	
+-
+role_goodat_pro	#	actor_goodat_role*role_type_add	#	actor_goodat_role,role_type_add	#	电影拍摄：角色擅长加成 = (该明星对应角色擅长加成*剧本影片类型加成)的累加	#	
+-

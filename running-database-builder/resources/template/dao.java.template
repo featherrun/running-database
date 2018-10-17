@@ -1,0 +1,49 @@
+package __package__;
+
+import __package_entity__.__class__;
+import running.database.IDao;
+import running.database.IDb;
+
+import java.util.List;
+
+/**
+ * Created by running-database-builder
+ */
+public class __class__Dao implements IDao<__class__> {
+    public static final String SQL_SELECT = "SELECT * FROM `__tableName__`";
+    public static final String SQL_SELECT_INDEX = "SELECT * FROM `__tableName__` WHERE @KEY=?";
+    public static final String SQL_SELECT_PRIMARY = "SELECT * FROM `__tableName__` WHERE __primaryKey__=? LIMIT 1";
+	public static final String SQL_INSERT = "INSERT INTO `__tableName__` (__insert_key__) VALUES (__insert_ask__)";
+	public static final String SQL_UPDATE = "UPDATE `__tableName__` SET __update_key__ WHERE __primaryKey__=? LIMIT 1";
+	public static final String SQL_DELETE = "DELETE FROM `__tableName__` WHERE __primaryKey__=? LIMIT 1";
+
+	@Override
+	public List<__class__> select(IDb db) {
+		return db.executeQuery(__class__.class, SQL_SELECT);
+	}
+
+	@Override
+    public List<__class__> select(IDb db, String key, Object value) {
+        return db.executeQuery(__class__.class, SQL_SELECT_INDEX.replace("@KEY", key), value);
+    }
+
+    @Override
+    public List<__class__> select(IDb db, Object primaryValue) {
+        return db.executeQuery(__class__.class, SQL_SELECT_PRIMARY, primaryValue);
+    }
+
+	@Override
+	public int insert(IDb db, __class__ obj) {
+		return db.executeUpdate(SQL_INSERT, __insert_get__);
+	}
+
+	@Override
+	public int update(IDb db, __class__ obj) {
+		return db.executeUpdate(SQL_UPDATE, __update_get__, obj.__get_primary__());
+	}
+
+	@Override
+	public int delete(IDb db, __class__ obj) {
+		return db.executeUpdate(SQL_DELETE, obj.__get_primary__());
+	}
+}

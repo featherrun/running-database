@@ -1,0 +1,40 @@
+package __package__;
+
+/**
+ * __tableComment__
+ * Created by running-database-builder
+ */
+public class __class__ implements running.database.IEntity {
+    private String _db;
+__fields__
+__get_and_set__
+    @Override
+    public String database() {
+        return _db;
+    }
+
+    @Override
+    public String tableName() {
+        return "__tableName__";
+    }
+
+    @Override
+	public String primaryKey() {
+		return "__primaryKey__";
+	}
+
+    @Override
+	public Object primaryValue() {
+		return __primary__;
+	}
+
+	@Override
+	public void from(String db) {
+	    _db = db;
+	}
+
+    @Override
+	public void entries(running.core.Entry<String, Object> e) {
+__entries__
+    }
+}
