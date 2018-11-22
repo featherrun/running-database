@@ -12,33 +12,28 @@ import java.util.List;
  * Created by running-database-builder
  */
 public class __class__ {
-    private __base_class__ data; //__tableComment__
 __fields__
 
     /**
-     * data's database
+     * Source database
      */
     public String database() {
-        return this.data.database();
+        return null;
     }
-
-    /**__tableComment__*/
-	public __base_class__ getData() {
-		return data;
-	}
-	public void setData(__base_class__ data) {
-        this.data = data;
-	}
+    
+    public Object primaryValue() {
+    	return null;
+    }
 
 __get_and_set__
 
 	/**
-	 * load from database (if empty)
+	 * Load from database (if empty)
 	 * @param db
 	 * @param utils
 	 */
     public void load(IDb db, IEntityUtils utils) {
-    	final Object key = getData().primaryValue();
+    	final Object key = primaryValue();
 __loads__
     }
 }

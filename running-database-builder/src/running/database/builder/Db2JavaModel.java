@@ -65,10 +65,6 @@ public class Db2JavaModel {
 		ClassBuilder getAndSet = new ClassBuilder(1);
 		ClassBuilder loads = new ClassBuilder(2);
 		for (Struct.Table table : struct.getTables()) {
-			if (table == baseStruct) {
-				continue;
-			}
-
 			String sql = table.getSql();
 			boolean isExtend = (table.getTableName().indexOf(baseTable) == 0 && table.getPrimaryKey().equals(baseStruct.getPrimaryKey()));
 			boolean hasListIndex = (sql.contains(listKeyString1) || sql.contains(listKeyString2));
@@ -82,7 +78,7 @@ public class Db2JavaModel {
 			}
 
 			String name = table.getTableName().substring(prefix.length());
-			if (name.indexOf(baseNoPrefix) == 0) {
+			if (name.indexOf(baseNoPrefix) == 0 && table != baseStruct) {
 				name = name.substring(baseNoPrefix.length());
 			}
 			String fieldType = table.getName();

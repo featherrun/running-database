@@ -43,10 +43,11 @@ public class SimpleDataSystem implements IDataSystem {
 	 */
 	public SimpleDataSystem(final Struct struct, final String packageName, final boolean unmodifiable, final SimpleDataSystem copy) {
 		cache = new HashMap<>();
+		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 		for (Struct.Table table : struct.getTables()) {
 			String name = packageName + "." + table.getName();
 			try {
-				Class<?> clazz = Class.forName(name);
+				Class<?> clazz = classLoader.loadClass(name);
 				if (copy != null) {
 					SimpleData<?> copyData = copy.getData(clazz);
 					if (copyData != null && copyData.copy) {
