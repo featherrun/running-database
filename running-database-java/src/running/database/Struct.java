@@ -131,6 +131,7 @@ public class Struct {
 
 		public static final String s_col = "\t#\t";
 		public static final String s_row = "\n-\n";
+		public static final String s_row_win = "\r\n-\r\n";
 
 		protected String sql;
 		protected String tableName;
@@ -200,6 +201,7 @@ public class Struct {
 		public void parseSql(String sql) {
 			this.sql = sql;
 			final StringUtils stringUtils = Running.get(StringUtils.class);
+			sql = sql.replaceAll("\\r\\n", "");
 			sql = sql.replaceAll("\\n", "");
 			Matcher m1 = p1.matcher(sql);
 			if (m1.find()) {
@@ -264,7 +266,7 @@ public class Struct {
 		public void parseData(String text) {
 			if (text.isEmpty())
 				return;
-			String[] lines = text.split(s_row);
+			String[] lines = text.contains(s_row_win) ? text.split(s_row_win) : text.split(s_row);
 			values = new String[lines.length][];
 			int i = 0;
 			for (String line : lines) {
