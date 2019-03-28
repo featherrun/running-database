@@ -16,7 +16,7 @@
 
 package running.database;
 
-import running.core.ILogger;
+import running.core.Logger;
 import running.core.Running;
 import running.util.StringUtils;
 import running.util.ZipUtils;
@@ -252,7 +252,7 @@ public class Struct {
 				if (primaryKey == null) {
 					primaryKey = fields[0].fieldName;
 					primary = stringUtils.normalize(primaryKey, false);
-					final ILogger logger = Running.getLogger(getClass());
+					final Logger logger = Running.getLogger(getClass());
 					logger.warn(tableName + ": unable to find the primary key, use `" + primaryKey + "` instead.");
 				}
 			}
@@ -276,7 +276,7 @@ public class Struct {
 
 			//如果解析的数据长度和字段长度不符，给以提示
 			if (values.length > 1 && values[1].length != fieldCount) {
-				final ILogger logger = Running.getLogger(getClass());
+				final Logger logger = Running.getLogger(getClass());
 				logger.warn("DATA-FIELD COUNT DIFFERENT: " + tableName + " " + values[1].length + " " + fieldCount);
 			}
 		}

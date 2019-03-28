@@ -16,7 +16,7 @@
 
 package running.database.builder;
 
-import running.core.ILogger;
+import running.core.Logger;
 import running.core.Running;
 import running.database.SimpleDb;
 import running.database.Struct;
@@ -26,7 +26,7 @@ import running.util.JsonUtils;
 import running.util.PropertiesUtils;
 
 public class Db2Json {
-	final ILogger logger = Running.getLogger(getClass());
+	final Logger logger = Running.getLogger(getClass());
 	final FileUtils fileUtils = Running.get(FileUtils.class);
 	final JsonUtils jsonUtils = Running.get(JsonUtils.class);
 	final JsonPackUtils jsonPackUtils = Running.get(JsonPackUtils.class);

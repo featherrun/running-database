@@ -1,0 +1,39 @@
+package __package__;
+
+import __package_entity__.*;
+import running.database.IDb;
+import running.database.IEntityUtils;
+
+import java.util.LinkedList;
+import java.util.List;
+
+/**
+ * __base_class__ model
+ * Created by running-database-builder
+ */
+public class __class__ {
+__fields__
+
+    /**
+     * Source database
+     */
+    public String database() {
+        return null;
+    }
+    
+    public Object primaryValue() {
+    	return null;
+    }
+
+__get_and_set__
+
+	/**
+	 * Load from database (if empty)
+	 * @param db
+	 * @param utils
+	 */
+    public void load(IDb db, IEntityUtils utils) {
+    	final Object key = primaryValue();
+__loads__
+    }
+}

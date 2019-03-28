@@ -16,7 +16,7 @@
 
 package running.database.builder;
 
-import running.core.ILogger;
+import running.core.Logger;
 import running.core.Running;
 import running.database.SimpleDb;
 import running.database.Struct;
@@ -31,7 +31,7 @@ import java.util.List;
  * Created by featherrun on 2015/10/16.
  */
 public class Db2Zip {
-	final ILogger logger = Running.getLogger(getClass());
+	final Logger logger = Running.getLogger(getClass());
 	final FileUtils fileUtils = Running.get(FileUtils.class);
 	final ZipUtils zipUtils = Running.get(ZipUtils.class);
 	final PropertiesUtils propertiesUtils = Running.get(PropertiesUtils.class);

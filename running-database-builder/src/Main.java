@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import running.core.ILogger;
+import running.core.Logger;
 import running.core.PrintLogger;
 import running.core.Running;
 import running.database.SimpleDb;
@@ -23,7 +23,7 @@ import running.util.*;
 
 public class Main {
 	static {
-		Running.set(ILogger.class, new PrintLogger(System.out, "FATAL","ERROR","WARN","INFO"));
+		Running.set(Logger.class, new PrintLogger(System.out, "FATAL","ERROR","WARN","INFO"));
 		Running.set(FileUtils.class, new FileUtils());
 		Running.set(StringUtils.class, new StringUtils());
 		Running.set(TimeUtils.class, new TimeUtils());

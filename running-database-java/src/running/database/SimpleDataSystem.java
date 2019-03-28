@@ -16,7 +16,7 @@
 
 package running.database;
 
-import running.core.ILogger;
+import running.core.Logger;
 import running.core.Running;
 
 import java.lang.reflect.Field;
@@ -26,7 +26,7 @@ import java.util.*;
  * local data system
  */
 public class SimpleDataSystem implements IDataSystem {
-	protected final ILogger logger = Running.getLogger(getClass());
+	protected final Logger logger = Running.getLogger(getClass());
 	protected final Map<Class<?>, SimpleData<?>> cache;
 
 	public SimpleDataSystem(final Struct struct, final String packageName) {
@@ -173,7 +173,7 @@ public class SimpleDataSystem implements IDataSystem {
 		 * @throws IllegalAccessException
 		 */
 		public void parse(final Struct.Table table, final boolean unmodifiable) throws InstantiationException, IllegalAccessException {
-			final ILogger logger = Running.getLogger(getClass());
+			final Logger logger = Running.getLogger(getClass());
 			primary = table.primary;
 			list = new LinkedList<>();
 			map = new HashMap<>();

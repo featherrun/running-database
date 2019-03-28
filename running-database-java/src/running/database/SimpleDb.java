@@ -16,14 +16,13 @@
 
 package running.database;
 
-import running.core.ILogger;
+import running.core.Logger;
 import running.core.Running;
-import running.util.StringUtils;
 
-import java.lang.reflect.Field;
 import java.sql.*;
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * 简单的Mysql操作封装 （非线程安全）
@@ -31,17 +30,16 @@ import java.util.concurrent.ConcurrentHashMap;
  * @version 2015/4/16
  */
 public class SimpleDb implements IDb {
-	protected final ILogger logger = Running.getLogger(getClass());
-	protected final StringUtils stringUtils = Running.get(StringUtils.class);
-	protected static final Map<Class<?>, QueryData> queryDataMap = new ConcurrentHashMap<>(); //查询结构
+	protected final Logger logger = Running.getLogger(getClass());
+	protected final SimpleMapper mapper = new SimpleMapper();
 	protected static long maxIdleTime = 30*60*1000; //最长闲置时间（毫秒）
+	protected boolean normalize = true;
 
 	protected String url;
 	protected String db;
 	protected String user;
 	protected String password;
 	protected Connection conn;
-	protected boolean normalize;
 	protected long lastConnectTime;
 
 	static {
@@ -64,7 +62,6 @@ public class SimpleDb implements IDb {
 		this.db = db.intern();
 		this.user = user;
 		this.password = password;
-		this.normalize = true;
 	}
 
 	/**
@@ -134,14 +131,10 @@ public class SimpleDb implements IDb {
 			}
 			rs = st.executeQuery();
 
-			QueryData queryData = queryDataMap.get(clazz);
-			if (queryData == null) {
-				queryData = new QueryData(clazz, rs.getMetaData());
-				queryDataMap.put(clazz, queryData);
-			}
+			SimpleMapper.QueryData queryData = mapper.getQueryData(rs, clazz);
 
 			while (rs.next()) {
-				T obj = resultToObject(rs, clazz, queryData);
+				T obj = mapper.getObject(rs, clazz, queryData, normalize);
 				if (obj != null) {
 					res.add(obj);
 				}
@@ -165,68 +158,6 @@ public class SimpleDb implements IDb {
 		}
 		return res;
 	}
-	
-	protected class QueryData {
-		Class<?> clazz;
-		Map<String, Field> fieldMap;
-		String[] cols;
-		String[] colsUpper;
-		QueryData(Class<?> clazz, ResultSetMetaData metaData) throws Exception {
-			this.clazz = clazz;
-			this.fieldMap = new HashMap<>();
-			for (Field field : clazz.getDeclaredFields()) {
-				field.setAccessible(true);
-				fieldMap.put(field.getName(), field);
-			}
-
-			int count = metaData.getColumnCount();
-			this.cols = new String[count];
-			this.colsUpper = new String[count];
-			for (int i=0; i<count; i++) {
-				String s = metaData.getColumnLabel(i+1);
-				cols[i] = s;
-				colsUpper[i] = stringUtils.normalize(s, false);
-			}
-		}
-	}
-
-	protected <T> T resultToObject(ResultSet rs, Class<T> clazz, QueryData queryData) throws Exception {
-		T obj = clazz.newInstance();
-		int len = queryData.cols.length;
-		for (int i=0; i<len; i++) {
-			String s = queryData.cols[i];
-			String fieldName = normalize ? queryData.colsUpper[i] : s;
-			Field field = queryData.fieldMap.get(fieldName);
-			if (field != null) {
-				Class<?> type = field.getType();
-				if (type == int.class || type == Integer.class) {
-					field.set(obj, rs.getInt(s));
-				} else if (type == String.class) {
-					field.set(obj, rs.getString(s));
-				} else if (type == long.class || type == Long.class) {
-					field.set(obj, rs.getLong(s));
-				} else if (type == short.class || type == Short.class) {
-					field.set(obj, rs.getShort(s));
-				} else if (type == byte.class || type == Byte.class) {
-					field.set(obj, rs.getByte(s));
-				} else if (type == boolean.class || type == Boolean.class) {
-					field.set(obj, rs.getBoolean(s));
-				} else if (type == double.class || type == Double.class) {
-					field.set(obj, rs.getDouble(s));
-				} else if (type == float.class || type == Float.class) {
-					field.set(obj, rs.getFloat(s));
-				} else if (logger != null) {
-					logger.debug("FIELD TYPE NOT FOUND：" + clazz.getName() + " " + fieldName);
-				}
-			} else {
-				if (logger != null) {
-					logger.debug("FIELD isn't IN CLASS：" + clazz.getName() + " " + fieldName);
-				}
-			}
-		}
-		return obj;
-	}
-
 
 	/**
 	 * 查询单个

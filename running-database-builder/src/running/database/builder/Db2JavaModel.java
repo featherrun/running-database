@@ -16,17 +16,17 @@
 
 package running.database.builder;
 
-import running.core.ClassBuilder;
-import running.core.ILogger;
+import running.core.Logger;
 import running.core.Running;
 import running.database.SimpleDb;
 import running.database.Struct;
+import running.help.ClassBuilder;
 import running.util.FileUtils;
 import running.util.PropertiesUtils;
 import running.util.StringUtils;
 
 public class Db2JavaModel {
-	final ILogger logger = Running.getLogger(getClass());
+	final Logger logger = Running.getLogger(getClass());
 	final FileUtils fileUtils = Running.get(FileUtils.class);
 	final StringUtils stringUtils = Running.get(StringUtils.class);
 	final PropertiesUtils propertiesUtils = Running.get(PropertiesUtils.class);
